@@ -195,7 +195,7 @@
           <li>${toolIco}${SERVICES_SHOWN.join(" · ")}</li>
         </ul>
         <div class="vnext"><div class="vnext__txt"><p class="vlabel">Next free measure</p><p class="vtime">${esc(s.earliest)}</p></div>
-          <div class="vnext__actions"><a class="vlink" href="#/store/${s.id}">Store details</a>${book("btn--primary btn--sm")}</div></div>
+          <div class="vnext__actions"><a class="vlink" href="#/store/${s.id}">View store page</a>${book("btn--primary btn--sm")}</div></div>
       </div></article>`;
     if (cardStyle === "e") return `<article class="vcard-e ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
       <img class="vcard-e__img" src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" />
@@ -217,7 +217,7 @@
         <p class="vline">${statusHTML(s)}<span class="vsep" aria-hidden="true">·</span>${ratingHTML(s)}</p>
       </div>
       <div class="vcard-c__foot"><p class="vcard-c__next"><span class="vlabel">Next free measure</span><span class="vtime">${esc(s.earliest)}</span></p>
-        <div class="vcard-c__btns"><a class="btn btn--secondary btn--sm" href="#/store/${s.id}">Store details</a>${book("btn--primary btn--sm")}</div></div></article>`;
+        <div class="vcard-c__btns"><a class="btn btn--secondary btn--sm" href="#/store/${s.id}">View store page</a>${book("btn--primary btn--sm")}</div></div></article>`;
   }
 
   function cardHTML(s, i) {
