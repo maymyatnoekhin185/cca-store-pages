@@ -617,7 +617,7 @@ body:has(#overlay-root:not(:empty)) .proto { display: none; }
   .chip.is-selected { padding: 9px 11px; }
   .rh__count { margin: 0; }
   .notice { max-width: none; margin: 12px 0; align-items: flex-start; }
-  .lochint { margin: 4px 0 12px; }
+  .lochint { margin: 0 0 12px; }
           .results { gap: 12px; padding-top: 8px; }
   .scard { flex-direction: column; align-items: stretch; gap: 8px; padding: 16px; }
   .scard.is-selected { padding: 15px; }

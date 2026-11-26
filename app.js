@@ -86,8 +86,8 @@
             </div>
             <button type="button" class="btn btn--secondary btn--icon-right btn--map-desktop" data-action="toggle-view">${L.view === "map" ? `List view ${listIcon()}` : `Map view ${icon("map-trifold.svg")}`}</button>
           </form>
-          <div class="loc__mobile-row" id="mobile-row"></div>
           <div id="notice"></div>
+          <div class="loc__mobile-row" id="mobile-row"></div>
           <div id="rh"></div>
           <div id="map-mobile"></div>
           <div id="results" aria-live="polite" aria-busy="false"></div>
