@@ -439,7 +439,7 @@
     return `<div class="hours">${withHeader ? `<div class="popover__head"><p class="h4" id="hours-title">Opening hours</p><button type="button" class="popover__close" data-action="close-overlay" aria-label="Close opening hours">${icon("close.svg", 20)}</button></div>` : ""}
       <p class="hours__status"><span class="hours__dot"></span>Open now · closes 5:00pm</p>
       <div class="hours__days">${D.HOURS.map(([d, h], i) => `<div class="hours__row ${i === today ? "is-today" : ""}"><span>${d}</span><span class="${h === "Closed" ? "closed" : ""}">${h}</span></div>`).join("")}</div>
-      <p class="p-xs muted">Public holiday hours may vary.</p></div>`;
+      <p class="hours__note">Public holiday hours may vary.</p></div>`;
   }
   const sh = (over, title, sub) => `<div class="sh"><p class="overline">${over}</p><h2 class="h2">${title}</h2>${sub ? `<p class="sh__sub">${sub}</p>` : ""}</div>`;
   const featureVideo = (id, caption, w) => `<div class="vfeature" ${w ? `style="width:${w}px"` : ""}>

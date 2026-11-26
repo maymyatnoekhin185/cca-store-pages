@@ -462,13 +462,13 @@ main { outline: none; }
 .faq { padding: 0; transition: border-color .15s; }
 .faq.is-open { border-color: var(--blue); }
 .faq__q { width: 100%; display: flex; align-items: center; gap: 8px; padding: 12px; text-align: left; }
-.faq__q span { flex: 1 1 auto; font-weight: 500; font-size: 12px; line-height: 16px; letter-spacing: .06px; }
+.faq__q span { flex: 1 1 auto; font-weight: 500; font-size: 14px; line-height: 20px; letter-spacing: .07px; }
 .faq__icon { width: 20px; height: 20px; flex: none; position: relative; }
 .faq__icon::before, .faq__icon::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.6px; background: var(--black); transform: translate(-50%, -50%); border-radius: 1px; transition: transform .2s, background-color .2s; }
 .faq__icon::after { transform: translate(-50%, -50%) rotate(90deg); }
 .faq.is-open .faq__icon::before { background: var(--blue); }
 .faq.is-open .faq__icon::after { transform: translate(-50%, -50%) rotate(0); opacity: 0; }
-.faq__a { padding: 0 12px 12px; font-size: 12px; line-height: 16px; letter-spacing: .06px; color: var(--text-60); }
+.faq__a { padding: 0 12px 14px; font-size: 14px; line-height: 20px; letter-spacing: .07px; color: var(--text-60); }
 .faqs .vfeature { width: 340px; }
 .visit { display: flex; gap: 24px; align-items: flex-start; }
 .visit__img { width: 349px; height: 236px; border-radius: 12px; object-fit: cover; flex: none; }
@@ -476,10 +476,11 @@ main { outline: none; }
 .visit__actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 .hours { display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--grey-1); border-radius: 16px; padding: 0; }
-.hours__status { display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 12px; line-height: 12px; color: var(--success); }
+.hours__status { display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 14px; line-height: 20px; color: var(--success); }
 .hours__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
 .hours__days { display: flex; flex-direction: column; }
-.hours__row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 8px; border-radius: 4px; font-size: 12px; line-height: 16px; letter-spacing: .06px; }
+.hours__row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 10px; border-radius: 4px; font-size: 14px; line-height: 20px; letter-spacing: .07px; }
+.hours__note { font-size: 13px; line-height: 18px; color: var(--text-60); }
 .hours__row.is-today { background: var(--soft); font-weight: 500; }
 .hours__row .closed { color: var(--text-20); }
 .visit .hours { border: 0; }
