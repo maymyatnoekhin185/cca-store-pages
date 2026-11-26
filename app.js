@@ -42,6 +42,9 @@
     else { L.view = h.startsWith("/map") ? "map" : "list"; saveL(); renderLocator(); }
     window.scrollTo(0, 0);
     app.focus({ preventScroll: true });
+    if (m && /#book$/.test(h)) setTimeout(() => scrollToId("book"), 60); // "More times" deep link
+  }
+  {
   }
   window.addEventListener("hashchange", route);
 
@@ -162,8 +165,8 @@
   }
 
   /* ----- Card style options (prototype: compare desktop card designs) ----- */
-  const CARD_STYLES = [["current", "Current"], ["a", "A · Store list"], ["b", "B · Directory rows"], ["c", "C · Photo grid"]];
-  let cardStyle = (() => { try { return localStorage.getItem("cc-card") || "current"; } catch { return "current"; } })();
+  const CARD_STYLES = [["current", "Current"], ["c", "C · Photo grid"], ["d", "D · Split card"], ["e", "E · Time slots"]];
+  let cardStyle = (() => { try { const v = localStorage.getItem("cc-card"); return CARD_STYLES.some(([k]) => k === v) ? v : "current"; } catch { return "current"; } })();
   const useVariant = () => !isMobile() && cardStyle !== "current";
   const SERVICES_SHOWN = ["Free measure", "Carpet", "Timber", "Blinds"];
   const tick = `<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -175,25 +178,35 @@
   function cardVariant(s) {
     const sel = s.id === L.selectedId ? "is-selected" : "";
     const book = (cls = "btn--primary") => `<button type="button" class="btn ${cls}" data-action="open-chat" data-context="book-store" data-id="${s.id}">Book this time</button>`;
-    if (cardStyle === "a") return `<article class="vcard-a ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
-      <img class="vcard-a__img" src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" />
-      <div class="vcard-a__info">
-        <h2 class="vcard-a__name"><a href="#/store/${s.id}">${esc(s.name)}</a></h2>
-        <p class="vline">${esc(s.address)} · ${s.km.toFixed(1)} km away</p>
-        <p class="vline">${statusHTML(s)}<span class="vsep" aria-hidden="true">·</span>${ratingHTML(s)}</p>
-        <ul class="vservices" aria-label="Services">${SERVICES_SHOWN.map((t) => `<li>${tick}${t}</li>`).join("")}</ul>
-      </div>
-      <div class="vcard-a__book">
-        <p class="vlabel">Next free measure</p><p class="vtime">${esc(s.earliest)}</p>
-        ${book("btn--primary btn--block")}
-        <a class="vlink" href="#/store/${s.id}">Store details <span aria-hidden="true">›</span></a>
+    const pinIco = `<span class="ico">${icon("store-locator.svg", 18)}</span>`;
+    const clockIco = `<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>`;
+    const starIco = `<span class="ico">${icon("star.svg", 18)}</span>`;
+    const toolIco = `<span class="ico" style="color:var(--success)">${tick}</span>`;
+    if (cardStyle === "d") return `<article class="vcard-d ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
+      <div class="vcard-d__media"><img src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" /></div>
+      <div class="vcard-d__body">
+        <div class="vcard-d__head"><h2 class="vcard-d__name"><a href="#/store/${s.id}">${esc(s.name)}</a></h2><span class="vcard-d__km">${s.km.toFixed(1)} km</span></div>
+        <ul class="vinfo">
+          <li>${pinIco}${esc(s.address)}</li>
+          <li>${clockIco}${statusHTML(s)}</li>
+          <li>${starIco}<span><b style="color:var(--black);font-weight:500">${s.rating}</b> from ${s.reviews} Google reviews</span></li>
+          <li>${toolIco}${SERVICES_SHOWN.join(" · ")}</li>
+        </ul>
+        <div class="vnext"><div class="vnext__txt"><p class="vlabel">Next free measure</p><p class="vtime">${esc(s.earliest)}</p></div>
+          <div class="vnext__actions"><a class="vlink" href="#/store/${s.id}">Store details</a>${book("btn--primary btn--sm")}</div></div>
       </div></article>`;
-    if (cardStyle === "b") return `<article class="vrow ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
-      <div class="vrow__store"><h2 class="vrow__name"><a href="#/store/${s.id}">${esc(s.name)}</a></h2><p class="vline">${esc(s.address)}</p></div>
-      <p class="vrow__km">${s.km.toFixed(1)} km</p>
-      <div class="vrow__meta"><p class="vline">${statusHTML(s)}</p><p class="vline">${ratingHTML(s)}</p></div>
-      <div class="vrow__next"><p class="vlabel">Next free measure</p><p class="vtime">${esc(s.earliest)}</p></div>
-      <div class="vrow__cta">${book("btn--secondary btn--sm")}<a class="vlink" href="#/store/${s.id}">Details <span aria-hidden="true">›</span></a></div></article>`;
+    if (cardStyle === "e") return `<article class="vcard-e ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
+      <img class="vcard-e__img" src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" />
+      <div class="vcard-e__info">
+        <h2 class="vcard-e__name"><a href="#/store/${s.id}">${esc(s.name)}</a></h2>
+        <p class="vline">${esc(s.address)} · ${s.km.toFixed(1)} km</p>
+        <p class="vline">${statusHTML(s)}<span class="vsep" aria-hidden="true">·</span>${ratingHTML(s)}</p>
+      </div>
+      <div class="vcard-e__slots">
+        <p class="vlabel">Book a free measure: pick a time</p>
+        <div class="vslots">${s.slots.map(([d, t]) => `<button type="button" class="vslot" data-action="open-chat" data-context="book-store" data-id="${s.id}" data-when="${esc(d + ", " + t)}" aria-label="Book ${esc(d)}, ${t}"><small>${esc(d)}</small><b>${t}</b></button>`).join("")}</div>
+        <div class="vcard-e__foot"><a class="vlink" href="#/store/${s.id}">Store details</a><a class="vlink" href="#/store/${s.id}#book">More times</a></div>
+      </div></article>`;
     return `<article class="vcard-c ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
       <img class="vcard-c__img" src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" />
       <div class="vcard-c__body">
@@ -639,7 +652,7 @@
     const sid = el?.dataset.id; const s = sid ? storeById(sid) : null;
     const msgs = {
       consultation: [["bot", "Hi! I'm the Carpet Court assistant. I can book a free in-home measure and quote. Which suburb are you in?"]],
-      "book-store": [["me", `Book ${s?.earliest} at ${s?.short}`], ["bot", `Great choice. I've held ${s?.earliest} at ${s?.name} for 10 minutes. What's your name?`]],
+      "book-store": (() => { const when = el?.dataset.when || s?.earliest; return [["me", `Book ${when} at ${s?.short}`], ["bot", `Great choice. I've held ${when} at ${s?.name} for 10 minutes. What's your name?`]]; })(),
       "book-panel": (() => { const when = `${WD[new Date(DS.year, DS.month, DS.day).getDay()]} ${DS.day} ${DS.month === 8 ? "Sept" : MONTHS[DS.month].slice(0, 3)}, ${DS.time}`; const st = detailStore(DS.storeId); return [["me", `Book ${when} at ${st.short}`], ["bot", `Lovely. I've held ${when} with Todd at ${st.name} for 10 minutes. What's your name?`]]; })(),
       callback: [["me", "Please call me back"], ["bot", "No problem. Todd will ring you back today. What's the best number to reach you?"]],
     }[context] || [["bot", "Hi! How can I help?"]];
@@ -673,6 +686,10 @@
   function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("is-on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("is-on"), 2600); }
   function scrollToId(id) {
     const el = document.getElementById(id); if (!el) return;
+    if (id === "book" && !isMobile()) { // the booking panel sits in the sticky column: scroll to the top of the columns
+      const d = $(".details"); window.scrollTo({ top: d.getBoundingClientRect().top + scrollY - 56, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      setTimeout(() => ($("#book .day.is-selected") || el).focus({ preventScroll: true }), 400); return;
+    }
     el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
     el.setAttribute("tabindex", "-1"); setTimeout(() => el.focus({ preventScroll: true }), 400);
   }
