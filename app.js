@@ -104,7 +104,7 @@
   }
 
   /* Location feedback lives in the search field and the button (no boxes). Blocked adds one quiet hint line. */
-  const infoIco = (size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="#63666A" stroke-width="1.6"/><path d="M12 11v5.5" stroke="#63666A" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1.1" fill="#63666A"/></svg>`;
+  const infoIco = (size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1.1" fill="currentColor"/></svg>`;
   function renderLocBtn() {
     const slot = $("#locbtn-slot"); if (!slot) return;
     const st = L.loc, off = st === "blocked";

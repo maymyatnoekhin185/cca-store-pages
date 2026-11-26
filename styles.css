@@ -182,7 +182,7 @@ main { outline: none; }
 /* Location: state shown in the search field and button; blocked adds a quiet hint */
 .searchbox.is-located .searchbox__field { border-color: var(--blue); }
 .searchbox.is-located input { color: var(--blue); font-weight: 500; }
-.lochint { display: flex; align-items: flex-start; gap: 8px; margin: -12px 0 16px; font-size: 14px; line-height: 20px; color: var(--text-60); }
+.lochint { display: flex; align-items: flex-start; gap: 8px; margin: -12px 0 16px; font-size: 14px; line-height: 20px; color: var(--error); }
 .lochint svg { flex: none; margin-top: 1px; }
 .locbtn.is-off { color: var(--text-20); border-color: var(--grey-2); }
 .locbtn.is-off:hover { color: var(--black); border-color: var(--cool-grey); }
