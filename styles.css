@@ -505,8 +505,8 @@ main { outline: none; }
 .gmap__fs:hover { background: #ebebeb; }
 .gmap__review { position: absolute; right: 10px; bottom: 28px; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0; padding: 6px 12px 4px; background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.2); text-decoration: none; color: var(--black); }
 .gmap__review-t { font-weight: 500; font-size: 11px; line-height: 14px; letter-spacing: .2px; }
-.gmap__g { font-family: Arial, Helvetica, sans-serif; font-size: 22px; line-height: 24px; letter-spacing: -0.5px; }
-.gmap__g b { font-weight: 400; }
+.gmap__g { font-size: 22px; line-height: 24px; }
+.gmap__g b { font-weight: 500; }
 .gmap__review:hover { box-shadow: 0 2px 10px rgba(0,0,0,.25); }
 
 /* ---------- Overlays ---------- */
