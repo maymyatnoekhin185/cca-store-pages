@@ -37,6 +37,8 @@
     $$(".ftr__col").forEach((d) => (d.open = !isMobile())); // footer link groups fold away on mobile
     const h = location.hash.replace(/^#/, "") || "/";
     const m = h.match(/^\/store\/([\w-]+)/);
+    const cm = h.match(/[?&]card=(\w+)/); // review links, e.g. #/?card=d
+    if (cm && CARD_STYLES.some(([k]) => k === cm[1])) { cardStyle = cm[1]; try { localStorage.setItem("cc-card", cardStyle); } catch {} }
     document.body.classList.remove("has-mcta");
     if (m) renderDetails(m[1]);
     else { L.view = h.startsWith("/map") ? "map" : "list"; saveL(); renderLocator(); }
