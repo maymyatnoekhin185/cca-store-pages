@@ -84,7 +84,7 @@
                 <span id="locbtn-slot"></span>
               </div>
             </div>
-            <button type="button" class="btn btn--secondary btn--icon-right btn--map-desktop" data-action="toggle-view">${L.view === "map" ? `List view ${listIcon()}` : `Map view ${icon("map-trifold.svg")}`}</button>
+            <button type="button" class="btn btn--secondary btn--icon-right btn--map-desktop" data-action="toggle-view">${L.view === "map" ? `Close map ${icon("close.svg", 20)}` : `Map view ${icon("map-trifold.svg")}`}</button>
           </form>
           <div id="notice"></div>
           <div class="loc__mobile-row" id="mobile-row"></div>
@@ -129,7 +129,7 @@
     const n = filterCount();
     el.innerHTML = `
       <button type="button" class="chip ${n ? "is-selected" : ""}" data-action="open-filter-sheet">${n ? `Filters (${n})` : "Filters"} ${icon(n ? "chevron-blue.svg" : "chevron.svg", 14)}</button>
-      <button type="button" class="btn btn--secondary btn--sm btn--icon-right" data-action="toggle-view">${L.view === "map" ? `List view ${listIcon()}` : `Map view ${icon("map-trifold.svg", 20)}`}</button>`;
+      <button type="button" class="btn btn--secondary btn--sm btn--icon-right" data-action="toggle-view">${L.view === "map" ? `Close map ${icon("close.svg", 20)}` : `Map view ${icon("map-trifold.svg", 20)}`}</button>`;
   }
 
   function renderNotice() {
@@ -244,7 +244,21 @@
   }
 
   /* ----- Map ----- */
-  const mapState = { x: 0, y: 0, z: 1, moved: false, areaLoading: false };
+  const mapState = { x: 0, y: 0, z: 1, t: "m", moved: false, areaLoading: false };
+  // Store Locator map: a live Google map as the base (same look as Find us / carpetcourt.com.au), not clickable itself.
+  // Our pins sit on each store's real town, projected with Web Mercator from the map centre and zoom.
+  const MAP_CENTRE = { lat: -32.86, lng: 151.84 };
+  const mapZoom = () => { const l = $("#maplayer"); return l && l.offsetWidth >= 700 ? 10 : 9; };
+  const locatorMapSrc = (z, t) => `https://www.google.com/maps?ll=${MAP_CENTRE.lat},${MAP_CENTRE.lng}&z=${z}&t=${t}&output=embed`;
+  const project = (lat, lng, z) => { const sc = 256 * 2 ** z, sin = Math.sin((lat * Math.PI) / 180); return [((lng + 180) / 360) * sc, (0.5 - Math.log((1 + sin) / (1 - sin)) / (4 * Math.PI)) * sc]; };
+  function positionPins() {
+    const layer = $("#maplayer"); if (!layer) return;
+    const z = mapZoom(), W = layer.offsetWidth, H = layer.offsetHeight;
+    const frame = $(".mapbox__frame", layer), want = locatorMapSrc(z, mapState.t);
+    if (frame && frame.dataset.src !== want) { frame.src = want; frame.dataset.src = want; }
+    const [cx, cy] = project(MAP_CENTRE.lat, MAP_CENTRE.lng, z);
+    $(".pin[data-id]", layer).forEach((p) => { const st = storeById(p.dataset.id); if (!st || !st.geo) return; const [x, y] = project(st.geo[0], st.geo[1], z); p.style.left = W / 2 + (x - cx) + "px"; p.style.top = H / 2 + (y - cy) + "px"; });
+  }
   function renderMap() {
     const target = L.view === "map" ? (isMobile() ? $("#map-mobile") : $("#map-desktop")) : null;
     const other = isMobile() ? $("#map-desktop") : $("#map-mobile");
@@ -254,14 +268,16 @@
     const sel = list.find((s) => s.id === L.selectedId);
     target.innerHTML = `<div class="mapbox ${isMobile() ? "mapbox--mobile" : ""}" id="mapbox" aria-label="Map of stores">
       <div class="mapbox__layer" id="maplayer" style="transform:translate(${mapState.x}px,${mapState.y}px) scale(${mapState.z})">
-        <img class="mapbox__img" src="assets/img/map-locator.png" alt="" draggable="false" />
+        <iframe class="mapbox__frame" title="Map" tabindex="-1" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         ${list.map((s) => pinHTML(s, s.id === L.selectedId)).join("")}
       </div>
-      <div class="mapbox__zoom"><button type="button" data-action="zoom" data-z="1" aria-label="Zoom in">+</button><button type="button" data-action="zoom" data-z="-1" aria-label="Zoom out">-</button></div>
+      <div class="gmap__type mapbox__type" role="group" aria-label="Map type"><button type="button" data-action="lmap-type" data-t="m" aria-pressed="${mapState.t === "m"}">Map</button><button type="button" data-action="lmap-type" data-t="k" aria-pressed="${mapState.t === "k"}">Satellite</button></div>
+      <button type="button" class="gmap__fs mapbox__fs" data-action="lmap-full" aria-label="View map full screen"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="#666" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="mapbox__zoom"><button type="button" data-action="zoom" data-z="1" aria-label="Zoom in">+</button><button type="button" data-action="zoom" data-z="-1" aria-label="Zoom out">−</button></div>
       ${mapState.moved || mapState.areaLoading ? `<button type="button" class="mapbox__area" data-action="search-area" ${mapState.areaLoading ? "aria-busy=true" : ""}>${mapState.areaLoading ? `<img class="spin" src="assets/icons/circle-notch.svg" alt="" width="18" height="18" />Searching...` : `${icon("arrow-clockwise.svg", 18)}Search this area`}</button>` : ""}
       ${sel ? ssbarHTML(sel) : ""}
     </div>`;
-    fitMap();
+    fitMap(); positionPins();
   }
   // Desktop split view: the map fills the visible screen below the header, then sticks while the list scrolls.
   function fitMap() {
@@ -271,10 +287,11 @@
     box.style.height = Math.max(420, innerHeight - Math.max(0, top)) + "px";
   }
   window.addEventListener("scroll", () => { if (L.view === "map" && !isMobile()) fitMap(); }, { passive: true });
-  window.addEventListener("resize", () => { if (L.view === "map" && !isMobile()) fitMap(); });
+  window.addEventListener("resize", () => { if (L.view === "map") { if (!isMobile()) fitMap(); positionPins(); } });
+  document.addEventListener("fullscreenchange", () => setTimeout(positionPins, 50));
   function pinHTML(s, sel) {
     // The layer is 140% of the visible map (inset -20%), so map design % to layer %.
-    const pos = `left:${((20 + s.pin.x) / 1.4).toFixed(2)}%;top:${((20 + s.pin.y) / 1.4).toFixed(2)}%`;
+    const pos = `left:${((20 + s.pin.x) / 1.4).toFixed(2)}%;top:${((20 + s.pin.y) / 1.4).toFixed(2)}%`; // replaced by real positions in positionPins()
     if (!sel) return `<button type="button" class="pin" style="${pos}" data-action="select-pin" data-id="${s.id}" aria-label="${esc(s.name)}"><span class="pin__badge">${icon("map-pin-blue.svg", 20)}</span></button>`;
     return `<button type="button" class="pin is-selected" style="${pos}" data-action="select-pin" data-id="${s.id}" aria-label="${esc(s.name)}, selected" aria-pressed="true"><span class="pin__halo"><span class="pin__badge">${icon("d-map-pin.svg", 26)}</span></span><span class="pin__label">${esc(s.short)}</span></button>`;
   }
@@ -720,6 +737,8 @@
         break;
       }
       case "close-ssbar": L.selectedId = null; renderMap(); renderResults(); saveL(); break;
+      case "lmap-type": mapState.t = a.dataset.t; renderMap(); break;
+      case "lmap-full": { const b = $("#mapbox"); if (document.fullscreenElement) document.exitFullscreen(); else if (b && b.requestFullscreen) b.requestFullscreen(); break; }
       case "zoom": mapState.z = Math.max(1, Math.min(1.6, mapState.z + Number(a.dataset.z) * 0.2)); renderMap(); break;
       case "search-area": mapState.areaLoading = true; mapState.moved = false; renderMap(); setTimeout(() => { mapState.areaLoading = false; L.region = "all"; L.searchedLabel = "this area"; fetchStores(300); }, 900); break;
       case "open-chat": e.preventDefault(); openChat(a.dataset.context, a); break;

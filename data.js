@@ -30,6 +30,9 @@ window.CC_DATA = (() => {
     { id: "belmont", name: "Belmont Carpet Court", short: "Belmont", km: 49.3, address: "380 Pacific Highway, Belmont", shortAddress: "380 Pacific Hwy, Belmont", suburb: "Belmont NSW 2280", phone: "02 4945 1188", open: "Open till 4pm", earliest: "Tue 15 Sept, 9:00am", slot: 8 * 1440 + 540, rating: 4.7, reviews: 72, img: "assets/img/store-image6.png", state: "NSW", services: ["measure", "install"], sat: true, sun: false, pin: { x: 38, y: 88 } },
   ];
 
+  const GEO = {"nelson-bay":[-32.7218,152.1438],"salamander-bay":[-32.7225,152.079],"raymond-terrace":[-32.7618,151.7447],"maitland":[-32.7186,151.5278],"charlestown":[-32.9645,151.6929],"kotara":[-32.9407,151.6939],"belmont":[-33.0381,151.6603]};
+  STORES.forEach((s) => { s.geo = GEO[s.id]; });
+
   // The Store Details design is for South Melbourne (opened from the header's store selector).
   const DETAIL_ONLY = { id: "south-melbourne", name: "South Melbourne Carpet Court", short: "South Melbourne", address: "216 York St, South Melbourne VIC 3205", phone: "02 4981 9266" };
 
