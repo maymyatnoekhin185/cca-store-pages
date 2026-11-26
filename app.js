@@ -257,7 +257,7 @@
     const frame = $(".mapbox__frame", layer), want = locatorMapSrc(z, mapState.t);
     if (frame && frame.dataset.src !== want) { frame.src = want; frame.dataset.src = want; }
     const [cx, cy] = project(MAP_CENTRE.lat, MAP_CENTRE.lng, z);
-    $(".pin[data-id]", layer).forEach((p) => { const st = storeById(p.dataset.id); if (!st || !st.geo) return; const [x, y] = project(st.geo[0], st.geo[1], z); p.style.left = W / 2 + (x - cx) + "px"; p.style.top = H / 2 + (y - cy) + "px"; });
+    $$(".pin[data-id]", layer).forEach((p) => { const st = storeById(p.dataset.id); if (!st || !st.geo) return; const [x, y] = project(st.geo[0], st.geo[1], z); p.style.left = W / 2 + (x - cx) + "px"; p.style.top = H / 2 + (y - cy) + "px"; });
   }
   function renderMap() {
     const target = L.view === "map" ? (isMobile() ? $("#map-mobile") : $("#map-desktop")) : null;
