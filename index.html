@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Carpet Court store pages prototype</title>
+  <meta name="description" content="Clickable prototype of the Carpet Court Store Locator and Store Details pages." />
+  <link rel="preload" href="assets/fonts/Brother1816-Medium.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="assets/fonts/Brother1816-Regular.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#app">Skip to content</a>
+
+  <header class="site-header" id="site-header">
+    <div class="promo" id="promo">
+      <p>30% off custom rugs today only!</p>
+      <button class="promo__close" type="button" data-action="close-promo" aria-label="Close offer"><img src="assets/icons/close-sml.svg" alt="" width="24" height="24" /></button>
+    </div>
+
+    <!-- Desktop -->
+    <div class="hdr-desktop">
+      <div class="hdr-utility wrap">
+        <a href="#/" class="hdr-logo" aria-label="Carpet Court home"><img src="assets/icons/group.svg" alt="Carpet Court" width="280" height="27" /></a>
+        <div class="hdr-utility__right">
+          <button type="button" class="btn btn--outline-blue btn--icon-left" data-action="open-chat" data-context="consultation"><img src="assets/icons/consultation.svg" alt="" width="24" height="24" />Book a free consultation</button>
+          <a class="hdr-phone" href="tel:1300227738">Call 1300 CARPET</a>
+          <div class="hdr-icons">
+            <button type="button" class="icon-btn" aria-label="Search"><img src="assets/icons/search.svg" alt="" width="24" height="24" /></button>
+            <button type="button" class="icon-btn" aria-label="My account"><img src="assets/icons/my-account-logged-out.svg" alt="" width="24" height="24" /></button>
+            <button type="button" class="icon-btn" aria-label="My collection"><img src="assets/icons/my-collection.svg" alt="" width="24" height="24" /></button>
+            <button type="button" class="icon-btn" aria-label="Cart"><img src="assets/icons/shopping-cart.svg" alt="" width="24" height="24" /></button>
+          </div>
+        </div>
+      </div>
+      <div class="hdr-aux wrap">
+        <a class="hdr-store" href="#/store/south-melbourne"><img src="assets/icons/store-locator.svg" alt="" width="24" height="24" /><span>South Melbourne Carpet Court</span><img class="hdr-store__chev" src="assets/icons/right-arrow24-outline.svg" alt="" width="24" height="24" /></a>
+        <a class="hdr-aux__btn" href="#"><img src="assets/icons/visualiser1.svg" alt="" width="24" height="24" />Room Visualiser</a>
+      </div>
+      <nav class="hdr-primary wrap" aria-label="Main">
+        <a href="#">Carpet</a><a href="#">Flooring</a><a href="#">Curtains &amp; Blinds</a><a href="#">Rugs</a><a href="#">Commercial</a><a href="#">Promotions</a><a href="#">Inspiration</a>
+      </nav>
+    </div>
+
+    <!-- Mobile -->
+    <div class="hdr-mobile">
+      <div class="hdr-mobile__left">
+        <button type="button" class="icon-btn icon-btn--sm" aria-label="Menu"><img src="assets/icons/menu.svg" alt="" width="18" height="12" /></button>
+        <a href="#/" aria-label="Carpet Court home"><img src="assets/icons/logo-mobile.svg" alt="Carpet Court" width="170" height="16" /></a>
+      </div>
+      <div class="hdr-mobile__right">
+        <button type="button" class="icon-btn icon-btn--sm" aria-label="My account"><img src="assets/icons/m-account.svg" alt="" width="20" height="20" /></button>
+        <button type="button" class="icon-btn icon-btn--sm" aria-label="My collection"><img src="assets/icons/m-heart.svg" alt="" width="20" height="18" /></button>
+        <button type="button" class="icon-btn icon-btn--sm" aria-label="Cart"><img src="assets/icons/m-cart.svg" alt="" width="20" height="20" /></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="xsell wrap">
+      <a class="xsell__card" href="#"><span class="xsell__img"><img src="assets/img/catalogue2.png" alt="" /></span><span class="xsell__txt"><img src="assets/icons/visualiser2.svg" alt="" width="24" height="24" />Use the Room Visualiser</span></a>
+      <a class="xsell__card" href="#"><span class="xsell__img xsell__img--insp"><img src="assets/img/catalogue1.png" alt="" /></span><span class="xsell__txt"><img src="assets/icons/inspiration.svg" alt="" width="24" height="24" />View our Inspiration</span></a>
+      <button class="xsell__card" type="button" data-action="open-chat" data-context="consultation"><span class="xsell__img"><img src="assets/img/catalogue3.png" alt="" /></span><span class="xsell__txt"><img src="assets/icons/consultation1.svg" alt="" width="24" height="24" />Book a free consultation</span></button>
+    </div>
+    <div class="ftr">
+      <div class="ftr__inner wrap">
+        <div class="ftr__left">
+          <form class="ftr__signup" data-action="signup">
+            <h2>Sign up to our enewsletter</h2>
+            <p>Sign up to the Carpet Court enewletter and be the first to know about new poducts, promotions and design inspiration.</p>
+            <label class="sr-only" for="ftr-email">Email address</label>
+            <input id="ftr-email" type="email" placeholder="Enter your email address" autocomplete="email" />
+            <button type="submit" class="btn btn--secondary">Submit</button>
+            <p class="ftr__signup-msg" role="status" aria-live="polite"></p>
+          </form>
+          <div class="ftr__social">
+            <a href="#" aria-label="Facebook"><img src="assets/icons/device-desktop-state-default.svg" alt="" width="32" height="32" /></a>
+            <a href="#" aria-label="Instagram"><img src="assets/icons/social-media-button.svg" alt="" width="32" height="32" /></a>
+            <a href="#" aria-label="Pinterest"><img src="assets/icons/social-media-button1.svg" alt="" width="32" height="32" /></a>
+            <a href="#" aria-label="YouTube"><img src="assets/icons/social-media-button2.svg" alt="" width="32" height="32" /></a>
+          </div>
+        </div>
+        <div class="ftr__right">
+          <details class="ftr__col" open>
+            <summary>Help Centre</summary>
+            <a href="#">FAQs</a><a href="#">Zip</a><a href="#">Afterpay</a><a href="#">Qantas Frequent Flyer</a><a href="#">Qantas Business Rewards</a><a href="#">Warranty Information</a><a href="#">Privacy Policies</a><a href="#">Privacy Collection Notice</a><a href="#">Social Media Policy</a><a href="#">Covid-19 Updates</a>
+          </details>
+          <div class="ftr__col-group">
+            <details class="ftr__col" open>
+              <summary>Our Company</summary>
+              <a href="#">About Us</a><a href="#">Franchise Opportunities</a><a href="#">Social Responsibility</a><a href="#">Careers</a>
+            </details>
+            <details class="ftr__col" open>
+              <summary>Get in touch</summary>
+              <a href="#" data-action="open-chat" data-context="consultation">Book a Consultation</a><a href="#/">Store Locator</a><a href="#">Contact Us</a>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__credits"><p>© 2022 Carpet Court. All Rights Reserved.</p></div>
+  </footer>
+
+  <!-- Overlays -->
+  <div id="overlay-root"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Prototype helper: jump to any state for reviews -->
+  <div class="proto" id="proto">
+    <button type="button" class="proto__toggle" data-action="toggle-proto" aria-expanded="false" aria-controls="proto-panel">Prototype</button>
+    <div class="proto__panel" id="proto-panel" hidden>
+      <p class="proto__title">Jump to a state</p>
+      <p class="proto__group">Store Locator</p>
+      <button type="button" data-proto="locator">List (default)</button>
+      <button type="button" data-proto="results">Search results (2315)</button>
+      <button type="button" data-proto="map">Map view</button>
+      <button type="button" data-proto="suggest">Typing: suggestions</button>
+      <button type="button" data-proto="loading">Searching: loading</button>
+      <button type="button" data-proto="noresults">No results</button>
+      <button type="button" data-proto="error">Error loading stores</button>
+      <button type="button" data-proto="loc-success">Use my location: success</button>
+      <button type="button" data-proto="loc-blocked">Use my location: blocked</button>
+      <button type="button" data-proto="filters">Filters open</button>
+      <p class="proto__group">Store Details</p>
+      <button type="button" data-proto="details">Store page</button>
+      <button type="button" data-proto="hours">View full hours</button>
+      <button type="button" data-proto="video">Video full screen</button>
+      <button type="button" data-proto="book">Booking: time picked</button>
+      <p class="proto__note">Booking and callbacks open the AI chat (shown as a placeholder).</p>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
