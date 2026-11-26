@@ -30,18 +30,6 @@ window.CC_DATA = (() => {
     { id: "belmont", name: "Belmont Carpet Court", short: "Belmont", km: 49.3, address: "380 Pacific Highway, Belmont", shortAddress: "380 Pacific Hwy, Belmont", suburb: "Belmont NSW 2280", phone: "02 4945 1188", open: "Open till 4pm", earliest: "Tue 15 Sept, 9:00am", slot: 8 * 1440 + 540, rating: 4.7, reviews: 72, img: "assets/img/store-image6.png", state: "NSW", services: ["measure", "install"], sat: true, sun: false, pin: { x: 38, y: 88 } },
   ];
 
-  // Next three free measure times per store (card option E).
-  const SLOTS = {
-    "nelson-bay": [["Thu 10 Sept", "9:00am"], ["Thu 10 Sept", "1:30pm"], ["Fri 11 Sept", "10:30am"]],
-    "salamander-bay": [["Thu 10 Sept", "1:00pm"], ["Fri 11 Sept", "9:00am"], ["Fri 11 Sept", "2:30pm"]],
-    "raymond-terrace": [["Fri 11 Sept", "9:30am"], ["Fri 11 Sept", "3:00pm"], ["Sat 12 Sept", "10:00am"]],
-    "maitland": [["Fri 11 Sept", "11:00am"], ["Mon 14 Sept", "9:00am"], ["Mon 14 Sept", "1:00pm"]],
-    "charlestown": [["Mon 14 Sept", "9:00am"], ["Mon 14 Sept", "11:30am"], ["Tue 15 Sept", "10:00am"]],
-    "kotara": [["Mon 14 Sept", "10:30am"], ["Tue 15 Sept", "9:00am"], ["Tue 15 Sept", "2:00pm"]],
-    "belmont": [["Tue 15 Sept", "9:00am"], ["Tue 15 Sept", "1:00pm"], ["Wed 16 Sept", "9:30am"]],
-  };
-  STORES.forEach((s) => { s.slots = SLOTS[s.id]; });
-
   // The Store Details design is for South Melbourne (opened from the header's store selector).
   const DETAIL_ONLY = { id: "south-melbourne", name: "South Melbourne Carpet Court", short: "South Melbourne", address: "216 York St, South Melbourne VIC 3205", phone: "02 4981 9266" };
 

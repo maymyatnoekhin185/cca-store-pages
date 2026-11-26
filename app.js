@@ -37,8 +37,6 @@
     $$(".ftr__col").forEach((d) => (d.open = !isMobile())); // footer link groups fold away on mobile
     const h = location.hash.replace(/^#/, "") || "/";
     const m = h.match(/^\/store\/([\w-]+)/);
-    const cm = h.match(/[?&]card=(\w+)/); // review links, e.g. #/?card=d
-    if (cm && CARD_STYLES.some(([k]) => k === cm[1])) { cardStyle = cm[1]; try { localStorage.setItem("cc-card", cardStyle); } catch {} }
     document.body.classList.remove("has-mcta");
     if (m) renderDetails(m[1]);
     else { L.view = h.startsWith("/map") ? "map" : "list"; saveL(); renderLocator(); }
@@ -166,49 +164,12 @@
     el.innerHTML = desktop + mobile;
   }
 
-  /* ----- Card style options (prototype: compare desktop card designs) ----- */
-  const CARD_STYLES = [["current", "Current"], ["c", "C · Photo grid"], ["d", "D · Split card"], ["e", "E · Time slots"]];
-  let cardStyle = (() => { try { const v = localStorage.getItem("cc-card"); return CARD_STYLES.some(([k]) => k === v) ? v : "current"; } catch { return "current"; } })();
-  const useVariant = () => !isMobile() && cardStyle !== "current";
-  const SERVICES_SHOWN = ["Free measure", "Carpet", "Timber", "Blinds"];
-  const tick = `<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  /* ----- Desktop store card (option C: photo on top, chosen 2026-11-26). Mobile keeps the featured/compact card. ----- */
+  const useGridCard = () => !isMobile();
   const statusHTML = (s) => `<span class="status ${/^Closed/.test(s.open) ? "status--closed" : ""}"><span class="status__dot" aria-hidden="true"></span>${esc(s.open)}</span>`;
   const ratingHTML = (s) => `<span class="vrating">${icon("star.svg", 14)}<b>${s.rating}</b><span>(${s.reviews})</span></span>`;
-  function cardSwitcher() {
-    return `<div class="card-switch" role="group" aria-label="Store card options (prototype)"><span>Card options</span>${CARD_STYLES.map(([k, l]) => `<button type="button" data-action="card-style" data-style="${k}" aria-pressed="${cardStyle === k}">${l}</button>`).join("")}</div>`;
-  }
-  function cardVariant(s) {
+  function gridCardHTML(s) {
     const sel = s.id === L.selectedId ? "is-selected" : "";
-    const book = (cls = "btn--primary") => `<button type="button" class="btn ${cls}" data-action="open-chat" data-context="book-store" data-id="${s.id}">Book this time</button>`;
-    const pinIco = `<span class="ico">${icon("store-locator.svg", 18)}</span>`;
-    const clockIco = `<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>`;
-    const starIco = `<span class="ico">${icon("star.svg", 18)}</span>`;
-    const toolIco = `<span class="ico" style="color:var(--success)">${tick}</span>`;
-    if (cardStyle === "d") return `<article class="vcard-d ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
-      <div class="vcard-d__media"><img src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" /></div>
-      <div class="vcard-d__body">
-        <div class="vcard-d__head"><h2 class="vcard-d__name"><a href="#/store/${s.id}">${esc(s.name)}</a></h2><span class="vcard-d__km">${s.km.toFixed(1)} km</span></div>
-        <ul class="vinfo">
-          <li>${pinIco}${esc(s.address)}</li>
-          <li>${clockIco}${statusHTML(s)}</li>
-          <li>${starIco}<span><b style="color:var(--black);font-weight:500">${s.rating}</b> from ${s.reviews} Google reviews</span></li>
-          <li>${toolIco}${SERVICES_SHOWN.join(" · ")}</li>
-        </ul>
-        <div class="vnext"><div class="vnext__txt"><p class="vlabel">Next free measure</p><p class="vtime">${esc(s.earliest)}</p></div>
-          <div class="vnext__actions"><a class="vlink" href="#/store/${s.id}">View store page</a>${book("btn--primary btn--sm")}</div></div>
-      </div></article>`;
-    if (cardStyle === "e") return `<article class="vcard-e ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
-      <img class="vcard-e__img" src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" />
-      <div class="vcard-e__info">
-        <h2 class="vcard-e__name"><a href="#/store/${s.id}">${esc(s.name)}</a></h2>
-        <p class="vline">${esc(s.address)} · ${s.km.toFixed(1)} km</p>
-        <p class="vline">${statusHTML(s)}<span class="vsep" aria-hidden="true">·</span>${ratingHTML(s)}</p>
-      </div>
-      <div class="vcard-e__slots">
-        <p class="vlabel">Book a free measure: pick a time</p>
-        <div class="vslots">${s.slots.map(([d, t]) => `<button type="button" class="vslot" data-action="open-chat" data-context="book-store" data-id="${s.id}" data-when="${esc(d + ", " + t)}" aria-label="Book ${esc(d)}, ${t}"><small>${esc(d)}</small><b>${t}</b></button>`).join("")}</div>
-        <div class="vcard-e__foot"><a class="vlink" href="#/store/${s.id}">Store details</a><a class="vlink" href="#/store/${s.id}#book">More times</a></div>
-      </div></article>`;
     return `<article class="vcard-c ${sel}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
       <img class="vcard-c__img" src="${s.img}" alt="${esc(s.short)} showroom" loading="lazy" />
       <div class="vcard-c__body">
@@ -217,11 +178,11 @@
         <p class="vline">${statusHTML(s)}<span class="vsep" aria-hidden="true">·</span>${ratingHTML(s)}</p>
       </div>
       <div class="vcard-c__foot"><p class="vcard-c__next"><span class="vlabel">Next free measure</span><span class="vtime">${esc(s.earliest)}</span></p>
-        <div class="vcard-c__btns"><a class="btn btn--secondary btn--sm" href="#/store/${s.id}">View store page</a>${book("btn--primary btn--sm")}</div></div></article>`;
+        <div class="vcard-c__btns"><a class="btn btn--secondary" href="#/store/${s.id}">View store page</a><button type="button" class="btn btn--primary" data-action="open-chat" data-context="book-store" data-id="${s.id}">Book this time</button></div></div></article>`;
   }
 
   function cardHTML(s, i) {
-    if (useVariant()) return cardVariant(s, i);
+    if (useGridCard()) return gridCardHTML(s);
     const sel = s.id === L.selectedId;
     const featured = sel || (!L.selectedId && i === 0);
     return `<article class="scard ${sel ? "is-selected" : ""} ${featured ? "is-featured" : ""}" data-action="select-store" data-id="${s.id}" aria-label="${esc(s.name)}">
@@ -245,6 +206,10 @@
   function renderResults() {
     const el = $("#results"); if (!el) return;
     el.setAttribute("aria-busy", L.status === "loading");
+    if (L.status === "loading" && useGridCard()) {
+      el.innerHTML = `<div class="results results--c">${Array.from({ length: 3 }, () => `<div class="vcard-c" aria-hidden="true" style="cursor:default"><div class="skel" style="aspect-ratio:16/10;border-radius:0"></div><div class="vcard-c__body"><div class="skel" style="width:60%;height:18px"></div><div class="skel" style="width:80%;height:12px;border-radius:6px"></div><div class="skel" style="width:50%;height:12px;border-radius:6px"></div></div><div class="vcard-c__foot"><div class="skel" style="width:100%;height:16px"></div><div class="vcard-c__btns"><div class="skel" style="flex:1;height:44px;border-radius:22px"></div><div class="skel" style="flex:1;height:44px;border-radius:22px"></div></div></div></div>`).join("")}<span class="sr-only">Searching for stores…</span></div>`;
+      return;
+    }
     if (L.status === "loading") {
       el.innerHTML = `<div class="results">${Array.from({ length: 3 }, () => `<div class="scard scard--skel" aria-hidden="true"><div class="skel" style="width:96px;height:96px"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div class="skel" style="width:220px;height:16px"></div><div class="skel" style="width:300px;max-width:100%;height:10px;border-radius:5px"></div><div style="display:flex;gap:8px"><div class="skel" style="width:64px;height:18px;border-radius:9px"></div><div class="skel" style="width:64px;height:18px;border-radius:9px"></div><div class="skel" style="width:64px;height:18px;border-radius:9px"></div></div></div><div style="width:200px;max-width:100%;display:flex;flex-direction:column;gap:8px;align-items:flex-end"><div class="skel" style="width:120px;height:10px;border-radius:5px"></div><div class="skel" style="width:100%;height:36px;border-radius:18px"></div></div></div>`).join("")}<span class="sr-only">Searching for stores…</span></div>`;
       return;
@@ -265,7 +230,7 @@
     }
     if (!list.some((s) => s.id === L.selectedId)) L.selectedId = list[0].id;
     const limit = isMobile() && !L.showAll ? 4 : list.length;
-    el.innerHTML = `${isMobile() ? "" : cardSwitcher()}<div class="results ${useVariant() ? `results--${cardStyle}` : ""}">${list.slice(0, limit).map(cardHTML).join("")}</div>${limit < list.length ? `<button type="button" class="link-btn show-more" data-action="show-more">Show more (${list.length - limit})</button>` : ""}`;
+    el.innerHTML = `<div class="results ${useGridCard() ? "results--c" : ""}">${list.slice(0, limit).map(cardHTML).join("")}</div>${limit < list.length ? `<button type="button" class="link-btn show-more" data-action="show-more">Show more (${list.length - limit})</button>` : ""}`;
   }
 
   /* ----- Map ----- */
@@ -724,7 +689,6 @@
       case "search-another": { window.scrollTo({ top: 0, behavior: "smooth" }); const i = $("#loc-q"); i.value = ""; L.query = ""; i.focus(); renderSuggest(true); break; }
       case "retry": fetchStores(); break;
       case "show-more": L.showAll = true; renderResults(); saveL(); break;
-      case "card-style": cardStyle = a.dataset.style; try { localStorage.setItem("cc-card", cardStyle); } catch {} renderResults(); $(`.card-switch [data-style="${cardStyle}"]`)?.focus(); break;
       case "select-store": {
         if (e.target.closest("a,button")) break;
         L.selectedId = a.dataset.id; renderResults(); renderMap(); saveL(); break;

@@ -179,11 +179,7 @@ main { outline: none; }
 .notice--blocked { background: var(--soft); border-color: var(--error); }
 .notice button { color: var(--blue); font-weight: 500; font-size: 14px; margin-left: 4px; }
 
-/* Card style options (prototype switcher + variants) */
-.card-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 10px; margin: 8px 0 4px; border: 1px dashed var(--grey-2); border-radius: 8px; font-size: 12px; color: var(--text-60); }
-.card-switch span { margin-right: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; font-size: 11px; }
-.card-switch button { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--grey-2); background: #fff; font-size: 13px; color: var(--black); }
-.card-switch button[aria-pressed="true"] { background: var(--black); border-color: var(--black); color: #fff; }
+/* Desktop store card (option C) */
 .vline { font-size: 14px; line-height: 20px; color: var(--text-60); display: flex; align-items: center; flex-wrap: wrap; gap: 0 6px; }
 .vsep { color: var(--grey-2); }
 .vlabel { font-size: 12px; line-height: 16px; color: var(--text-30); }
@@ -208,59 +204,16 @@ main { outline: none; }
 .vcard-c__body { display: flex; flex-direction: column; gap: 6px; padding: 16px 16px 12px; flex: 1 1 auto; }
 .vcard-c__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .vcard-c__name { font-weight: 500; font-size: 18px; line-height: 24px; }
-.vcard-c__km { flex: none; font-size: 13px; color: var(--text-60); }
+.vcard-c__km { flex: none; font-size: 12px; line-height: 16px; color: var(--text-60); }
 .vcard-c__foot { display: flex; flex-direction: column; gap: 12px; padding: 12px 16px 16px; border-top: 1px solid var(--grey-1); }
 .vcard-c__next { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .vcard-c__btns { display: flex; gap: 8px; }
 .vcard-c__btns .btn { flex: 1 1 0; padding-left: 12px; padding-right: 12px; }
 
-/* D: split card (hospitality / booking-site style) */
-.vcard-d { display: grid; grid-template-columns: 280px minmax(0, 1fr); background: #fff; border: 1px solid var(--grey-1); border-radius: 12px; overflow: hidden; cursor: pointer; transition: box-shadow .15s, border-color .15s; }
-.vcard-d:hover { box-shadow: var(--shadow-md); }
-.vcard-d.is-selected { border: 2px solid var(--blue); }
-.vcard-d__media { position: relative; min-height: 200px; }
-.vcard-d__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.vcard-d__body { display: flex; flex-direction: column; gap: 14px; padding: 20px 24px; min-width: 0; }
-.vcard-d__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.vcard-d__name { font-weight: 500; font-size: 22px; line-height: 28px; }
-.vcard-d__km { flex: none; padding: 4px 10px; border-radius: 50px; background: var(--soft); font-weight: 500; font-size: 13px; color: var(--black); }
-.vinfo { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.vinfo li { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; color: var(--text-60); }
-.vinfo .ico { width: 18px; height: 18px; flex: none; color: var(--cool-grey); display: inline-flex; }
-.vinfo .ico img, .vinfo .ico svg { width: 18px; height: 18px; }
-.vnext { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 12px 12px 16px; border-radius: 10px; background: #f2f8fd; margin-top: auto; }
-.vnext__txt { display: flex; flex-direction: column; gap: 2px; }
-.vnext__actions { display: flex; align-items: center; gap: 16px; flex: none; }
-
-/* E: time slots (booking-first) */
-.vcard-e { display: grid; grid-template-columns: 112px minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px; align-items: center; padding: 16px 24px 16px 16px; background: #fff; border: 1px solid var(--grey-1); border-radius: 12px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
-.vcard-e:hover { box-shadow: var(--shadow-md); }
-.vcard-e.is-selected { border: 2px solid var(--blue); padding: 15px 23px 15px 15px; }
-.vcard-e__img { width: 112px; height: 112px; border-radius: 8px; object-fit: cover; }
-.vcard-e__info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.vcard-e__name { font-weight: 500; font-size: 20px; line-height: 26px; }
-.vcard-e__slots { display: flex; flex-direction: column; gap: 8px; }
-.vslots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.vslot { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px; border: 1px solid var(--blue); border-radius: 8px; background: #fff; color: var(--blue); transition: background-color .15s, color .15s; }
-.vslot:hover { background: var(--blue); color: #fff; }
-.vslot small { font-size: 12px; line-height: 14px; }
-.vslot b { font-weight: 500; font-size: 15px; line-height: 18px; }
-.vcard-e__foot { display: flex; justify-content: space-between; align-items: center; }
-
 /* Narrow list (map split / tablet) */
 .loc-split .results.results--c { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 1439px) {
-  .loc-split .results.results--c { grid-template-columns: minmax(0, 1fr); }
-  .loc-split .vcard-d { grid-template-columns: 180px minmax(0, 1fr); }
-  .loc-split .vnext { flex-wrap: wrap; }
-  .loc-split .vcard-e { grid-template-columns: 88px minmax(0, 1fr); row-gap: 14px; }
-  .loc-split .vcard-e__img { width: 88px; height: 88px; }
-  .loc-split .vcard-e__slots { grid-column: 1 / -1; }
-}
-@media (max-width: 1199px) {
-  .vcard-e { grid-template-columns: 96px minmax(0, 1fr); row-gap: 14px; }
-  .vcard-e__slots { grid-column: 1 / -1; }
-}
+@media (max-width: 1439px) { .loc-split .results.results--c { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 1199px) { .results.results--c { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .rh { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-top: 1px solid #f3f4f6; flex-wrap: wrap; }
 .rh__group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
@@ -479,8 +432,8 @@ main { outline: none; }
 .hours__status { display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 14px; line-height: 20px; color: var(--success); }
 .hours__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
 .hours__days { display: flex; flex-direction: column; }
-.hours__row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 10px; border-radius: 4px; font-size: 14px; line-height: 20px; letter-spacing: .07px; }
-.hours__note { font-size: 13px; line-height: 18px; color: var(--text-60); }
+.hours__row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 8px; border-radius: 4px; font-size: 14px; line-height: 20px; letter-spacing: .07px; }
+.hours__note { font-size: 14px; line-height: 20px; color: var(--text-60); }
 .hours__row.is-today { background: var(--soft); font-weight: 500; }
 .hours__row .closed { color: var(--text-20); }
 .visit .hours { border: 0; }
