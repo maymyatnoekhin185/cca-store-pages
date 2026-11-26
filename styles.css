@@ -179,6 +179,23 @@ main { outline: none; }
 .notice--blocked { background: var(--soft); border-color: var(--error); }
 .notice button { color: var(--blue); font-weight: 500; font-size: 14px; margin-left: 4px; }
 
+/* Location blocked: option A inline hint, B button popover, C toast */
+.lochint { display: flex; align-items: flex-start; gap: 8px; margin: -12px 0 16px; font-size: 14px; line-height: 20px; color: var(--text-60); }
+.lochint svg { flex: none; margin-top: 1px; }
+.locwrap { position: relative; display: inline-flex; }
+.locbtn.is-off { color: var(--text-20); border-color: var(--grey-2); }
+.locbtn.is-off:hover { color: var(--black); border-color: var(--cool-grey); }
+.locpop { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); z-index: 30; width: 300px; padding: 16px; background: #fff; border: 1px solid var(--grey-2); border-radius: 12px; box-shadow: var(--shadow-md); display: flex; flex-direction: column; gap: 6px; text-align: left; animation: up .15s ease-out; }
+.locpop::before { content: ""; position: absolute; top: -7px; left: 50%; width: 12px; height: 12px; background: #fff; border-left: 1px solid var(--grey-2); border-top: 1px solid var(--grey-2); transform: translateX(-50%) rotate(45deg); }
+.locpop__t { font-weight: 500; font-size: 16px; line-height: 20px; padding-right: 24px; }
+.locpop__d { font-size: 14px; line-height: 20px; color: var(--text-60); }
+.locpop__a { display: flex; gap: 8px; margin-top: 8px; }
+.locpop__a .btn { flex: 1 1 0; padding-left: 12px; padding-right: 12px; }
+.locpop__x { position: absolute; right: 10px; top: 10px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.locpop__x:hover { background: var(--soft); }
+.toast--action { display: flex; align-items: center; gap: 10px; pointer-events: auto; padding: 12px 16px; }
+.toast--action button { color: #fff; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; margin-left: 6px; white-space: nowrap; }
+
 /* Desktop store card (option C) */
 .vline { font-size: 14px; line-height: 20px; color: var(--text-60); display: flex; align-items: center; flex-wrap: wrap; gap: 0 6px; }
 .vsep { color: var(--grey-2); }
@@ -593,6 +610,11 @@ body:has(#overlay-root:not(:empty)) .proto { display: none; }
   .chip.is-selected { padding: 9px 11px; }
   .rh__count { margin: 0; }
   .notice { max-width: none; margin: 12px 0; align-items: flex-start; }
+  .lochint { margin: 4px 0 12px; }
+  .locpop { left: auto; right: 0; transform: none; width: min(300px, calc(100vw - 32px)); }
+  .locpop::before { left: auto; right: 14px; transform: rotate(45deg); }
+  .toast--action { left: 16px; right: 16px; transform: translateY(20px); bottom: 16px; }
+  .toast--action.is-on { transform: none; }
   .results { gap: 12px; padding-top: 8px; }
   .scard { flex-direction: column; align-items: stretch; gap: 8px; padding: 16px; }
   .scard.is-selected { padding: 15px; }

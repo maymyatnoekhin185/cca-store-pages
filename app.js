@@ -103,13 +103,34 @@
     renderLocBtn(); renderMobileRow(); renderNotice(); renderRH(); renderMap(); renderResults(); saveL();
   }
 
+  /* Location blocked message: three styles to compare (prototype). a = inline hint, b = button popover, c = toast. */
+  let locStyle = (() => { try { return localStorage.getItem("cc-locstyle") || "a"; } catch { return "a"; } })();
+  const infoIco = (size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="#63666A" stroke-width="1.6"/><path d="M12 11v5.5" stroke="#63666A" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1.1" fill="#63666A"/></svg>`;
+  const locOffIco = `<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4L4.6 10.4c-.8.3-.7 1.4.1 1.6l6.1 1.6 1.6 6.1c.2.8 1.3.9 1.6.1L20 4z" fill="none" stroke="#8C8B8E" stroke-width="1.7" stroke-linejoin="round"/><path d="M3.5 3.5l17 17" stroke="#8C8B8E" stroke-width="1.7" stroke-linecap="round"/></svg>`;
   function renderLocBtn() {
     const slot = $("#locbtn-slot"); if (!slot) return;
     const st = L.loc;
-    const cls = st === "locating" ? "is-loading" : st === "success" ? "is-located" : "";
-    const ic = st === "locating" ? `<img class="spin" src="assets/icons/spinner.svg" alt="" width="20" height="20" />` : st === "success" ? icon("location-located.svg", 20) : icon("navigation-arrow.svg");
-    const txt = st === "locating" ? "Locating…" : st === "success" ? "My location" : "Use my location";
-    slot.innerHTML = `<button type="button" class="btn btn--secondary btn--icon-left locbtn locbtn--icon ${cls}" data-action="use-location" aria-label="${txt}" ${st === "locating" ? 'aria-busy="true"' : ""}>${ic}<span class="locbtn__txt">${txt}</span></button>`;
+    const off = st === "blocked" && locStyle !== "c";
+    const cls = st === "locating" ? "is-loading" : st === "success" ? "is-located" : off ? "is-off" : "";
+    const ic = st === "locating" ? `<img class="spin" src="assets/icons/spinner.svg" alt="" width="20" height="20" />` : st === "success" ? icon("location-located.svg", 20) : off ? locOffIco : icon("navigation-arrow.svg");
+    const txt = st === "locating" ? "Locating…" : st === "success" ? "My location" : off ? "Location off" : "Use my location";
+    const pop = st === "blocked" && locStyle === "b" ? `<div class="locpop" role="dialog" aria-labelledby="locpop-t">
+        <p class="locpop__t" id="locpop-t">Location is turned off</p>
+        <p class="locpop__d">Allow location for this site in your browser, then try again. Or search by suburb or postcode.</p>
+        <div class="locpop__a"><button type="button" class="btn btn--secondary btn--sm" data-action="use-location">Try again</button><button type="button" class="btn btn--primary btn--sm" data-action="loc-search-instead">Search instead</button></div>
+        <button type="button" class="locpop__x" data-action="loc-dismiss" aria-label="Close">${icon("close.svg", 20)}</button></div>` : "";
+    slot.innerHTML = `<span class="locwrap"><button type="button" class="btn btn--secondary btn--icon-left locbtn locbtn--icon ${cls}" data-action="use-location" aria-label="${off ? "Location off. Try again" : txt}" ${st === "locating" ? 'aria-busy="true"' : ""} ${pop ? 'aria-expanded="true"' : ""}>${ic}<span class="locbtn__txt">${txt}</span></button>${pop}</span>`;
+  }
+  function dismissLocBlocked() {
+    if (L.loc !== "blocked") return;
+    L.loc = "idle"; renderLocBtn(); renderNotice(); saveL();
+    const t = $("#toast"); if (t.classList.contains("toast--action")) { t.classList.remove("is-on", "toast--action"); }
+  }
+  function showLocToast() {
+    const t = $("#toast");
+    t.innerHTML = `${infoIco(18).replace(/#63666A/g, "#fff")}<span>We couldn't get your location. Try a suburb or postcode instead.</span><button type="button" data-action="loc-dismiss">Dismiss</button>`;
+    t.classList.add("is-on", "toast--action"); clearTimeout(t._h);
+    t._h = setTimeout(() => { t.classList.remove("is-on", "toast--action"); if (L.loc === "blocked") { L.loc = "idle"; saveL(); } }, 7000);
   }
 
   function renderMobileRow() {
@@ -124,7 +145,7 @@
     const el = $("#notice"); if (!el) return;
     if (L.loc === "locating") el.innerHTML = `<div class="notice" role="status"><img class="spin" src="assets/icons/spinner.svg" alt="" width="18" height="18" /><span>Finding your location…</span></div>`;
     else if (L.loc === "success") el.innerHTML = `<div class="notice" role="status">${icon("location-located.svg", 18)}<span>Showing stores near your current location</span><button type="button" data-action="loc-change">Change</button></div>`;
-    else if (L.loc === "blocked") el.innerHTML = `<div class="notice notice--blocked" role="alert">${icon("warning-circle.svg", 18)}<span>We couldn't get your location. Allow location access in your browser, or enter a suburb or postcode.</span></div>`;
+    else if (L.loc === "blocked" && locStyle === "a") el.innerHTML = `<p class="lochint" role="status">${infoIco()}<span>Location is off. Allow it in your browser, or type a suburb or postcode above.</span></p>`;
     else el.innerHTML = "";
   }
 
@@ -357,7 +378,11 @@
     const done = (ok) => {
       L.loc = ok ? "success" : "blocked";
       if (ok) { L.query = ""; const i = $("#loc-q"); if (i) i.value = ""; $(".searchbox__clear")?.setAttribute("hidden", ""); L.region = "all"; L.searchedLabel = "your location"; fetchStores(600); }
-      else updateLocator();
+      else {
+        updateLocator();
+        if (locStyle === "b") $(".locpop .btn--primary")?.focus({ preventScroll: true });
+        else if (locStyle === "c") showLocToast();
+      }
     };
     if (force) return setTimeout(() => done(force === "success"), 900);
     if (!navigator.geolocation) return setTimeout(() => done(false), 600);
@@ -669,6 +694,7 @@
     if (openDrop && !e.target.closest(".chip-wrap")) closeDropdown();
     if (!e.target.closest("#searchbox") && !$("#suggest")?.hidden) renderSuggest(false);
     if (overlayKind === "hours" && !isMobile() && !e.target.closest(".popover") && !(a && a.dataset.action === "hours")) closeOverlays({ restore: false });
+    if (L.loc === "blocked" && locStyle === "b" && !e.target.closest(".locwrap")) dismissLocBlocked();
     if (!a) return;
     const act = a.dataset.action;
     switch (act) {
@@ -677,6 +703,8 @@
       case "clear-q": { const i = $("#loc-q"); i.value = ""; L.query = ""; a.hidden = true; i.focus(); suggestIdx = -1; renderSuggest(true); saveL(); break; }
       case "pick": { const v = a.dataset.value; $("#loc-q").value = v; $(".searchbox__clear").hidden = false; renderSuggest(false); runSearch(v); break; }
       case "use-location": e.preventDefault(); useLocation(); break;
+      case "loc-dismiss": dismissLocBlocked(); break;
+      case "loc-search-instead": dismissLocBlocked(); $("#loc-q")?.focus(); break;
       case "loc-change": L.loc = "idle"; updateLocator(); $("#loc-q")?.focus(); break;
       case "drop": openDropdown(a.dataset.key); break;
       case "drop-clear": if (openDrop === "all") draft = { services: [], states: [], weekends: [] }; else draft[openDrop] = []; renderRH(); break;
@@ -752,7 +780,7 @@
   });
 
   document.addEventListener("input", (e) => {
-    if (e.target.id === "loc-q") { L.query = e.target.value; $(".searchbox__clear").hidden = !e.target.value; suggestIdx = -1; renderSuggest(true); saveL(); }
+    if (e.target.id === "loc-q") { dismissLocBlocked(); L.query = e.target.value; $(".searchbox__clear").hidden = !e.target.value; suggestIdx = -1; renderSuggest(true); saveL(); }
   });
   document.addEventListener("focusin", (e) => {
     if (e.target.id === "loc-q") renderSuggest(true);
@@ -802,7 +830,7 @@
       case "noresults": reset(); L.query = "2315"; L.searchedLabel = "2315"; L.filters.states = ["VIC"]; toLocator(); break;
       case "error": reset(); toLocator(); after(() => { failNext = true; $("#loc-q").value = "2315"; runSearch("2315"); }); break;
       case "loc-success": reset(); toLocator(); after(() => useLocation("success")); break;
-      case "loc-blocked": reset(); toLocator(); after(() => useLocation("blocked")); break;
+      case "loc-blocked-a": case "loc-blocked-b": case "loc-blocked-c": locStyle = k.slice(-1); try { localStorage.setItem("cc-locstyle", locStyle); } catch {} reset(); toLocator(); after(() => useLocation("blocked")); break;
       case "filters": reset(); toLocator(); after(() => { if (isMobile()) openFilterSheet(); else openDropdown("services"); }); break;
       case "details": location.hash = "#/store/south-melbourne"; break;
       case "hours": location.hash = "#/store/south-melbourne"; after(() => { const l = $('[data-action="hours"]'); l?.scrollIntoView({ block: "center" }); setTimeout(() => openHours(l), 80); }); break;
