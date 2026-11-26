@@ -217,7 +217,7 @@
         <p class="vline">${statusHTML(s)}<span class="vsep" aria-hidden="true">·</span>${ratingHTML(s)}</p>
       </div>
       <div class="vcard-c__foot"><p class="vcard-c__next"><span class="vlabel">Next free measure</span><span class="vtime">${esc(s.earliest)}</span></p>
-        <div class="vcard-c__btns"><a class="btn btn--secondary btn--sm" href="#/store/${s.id}">View store page</a>${book("btn--primary btn--sm")}</div></div></article>`;
+        <div class="vcard-c__btns"><a class="btn btn--secondary btn--sm" href="#/store/${s.id}">Store details</a>${book("btn--primary btn--sm")}</div></div></article>`;
   }
 
   function cardHTML(s, i) {
