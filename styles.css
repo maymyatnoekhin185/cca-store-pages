@@ -709,3 +709,4 @@ body:has(#overlay-root:not(:empty)) .proto { display: none; }
 
 @media (max-width: 1023px) { .gmap { height: 260px; } .gmap__review { bottom: 24px; } }
 @media (max-width: 1023px) { .locbtn--icon.is-located, .locbtn--icon.is-off, .locbtn--icon.is-loading { padding: 0; } }
+.locbtn.is-off img { opacity: .55; }

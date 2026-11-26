@@ -105,12 +105,11 @@
 
   /* Location feedback lives in the search field and the button (no boxes). Blocked adds one quiet hint line. */
   const infoIco = (size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="#63666A" stroke-width="1.6"/><path d="M12 11v5.5" stroke="#63666A" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1.1" fill="#63666A"/></svg>`;
-  const locOffIco = `<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4L4.6 10.4c-.8.3-.7 1.4.1 1.6l6.1 1.6 1.6 6.1c.2.8 1.3.9 1.6.1L20 4z" fill="none" stroke="#8C8B8E" stroke-width="1.7" stroke-linejoin="round"/><path d="M3.5 3.5l17 17" stroke="#8C8B8E" stroke-width="1.7" stroke-linecap="round"/></svg>`;
   function renderLocBtn() {
     const slot = $("#locbtn-slot"); if (!slot) return;
     const st = L.loc, off = st === "blocked";
     const cls = st === "locating" ? "is-loading" : st === "success" ? "is-located" : off ? "is-off" : "";
-    const ic = st === "locating" ? `<img class="spin" src="assets/icons/spinner.svg" alt="" width="20" height="20" />` : st === "success" ? icon("location-located.svg", 20) : off ? locOffIco : icon("navigation-arrow.svg");
+    const ic = st === "locating" ? `<img class="spin" src="assets/icons/spinner.svg" alt="" width="20" height="20" />` : st === "success" ? icon("location-located.svg", 20) : off ? icon("navigation-arrow.svg") : icon("navigation-arrow.svg");
     const txt = st === "locating" ? "Locating…" : st === "success" ? "My location" : off ? "Location off" : "Use my location";
     slot.innerHTML = `<button type="button" class="btn btn--secondary btn--icon-left locbtn locbtn--icon ${cls}" data-action="use-location" aria-label="${off ? "Location off. Try again" : txt}" ${st === "locating" ? 'aria-busy="true"' : ""}>${ic}<span class="locbtn__txt">${txt}</span></button>`;
   }
