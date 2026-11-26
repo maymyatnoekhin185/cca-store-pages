@@ -247,16 +247,17 @@
   const mapState = { x: 0, y: 0, z: 1, t: "m", moved: false, areaLoading: false };
   // Store Locator map: a live Google map as the base (same look as Find us / carpetcourt.com.au), not clickable itself.
   // Our pins sit on each store's real town, projected with Web Mercator from the map centre and zoom.
-  const MAP_CENTRE = { lat: -32.86, lng: 151.84 };
-  const mapZoom = () => { const l = $("#maplayer"); return l && l.offsetWidth >= 700 ? 10 : 9; };
-  const locatorMapSrc = (z, t) => `https://www.google.com/maps?ll=${MAP_CENTRE.lat},${MAP_CENTRE.lng}&z=${z}&t=${t}&output=embed`;
+  // Mobile: zoom out one step and centre further south so every pin sits above the selected-store bar.
+  const mapCentre = () => (isMobile() ? { lat: -33.12, lng: 151.84 } : { lat: -32.86, lng: 151.84 });
+  const mapZoom = () => { if (isMobile()) return 8; const l = $("#maplayer"); return l && l.offsetWidth >= 700 ? 10 : 9; };
+  const locatorMapSrc = (z, t) => `https://www.google.com/maps?ll=${mapCentre().lat},${mapCentre().lng}&z=${z}&t=${t}&output=embed`;
   const project = (lat, lng, z) => { const sc = 256 * 2 ** z, sin = Math.sin((lat * Math.PI) / 180); return [((lng + 180) / 360) * sc, (0.5 - Math.log((1 + sin) / (1 - sin)) / (4 * Math.PI)) * sc]; };
   function positionPins() {
     const layer = $("#maplayer"); if (!layer) return;
     const z = mapZoom(), W = layer.offsetWidth, H = layer.offsetHeight;
     const frame = $(".mapbox__frame", layer), want = locatorMapSrc(z, mapState.t);
     if (frame && frame.dataset.src !== want) { frame.src = want; frame.dataset.src = want; }
-    const [cx, cy] = project(MAP_CENTRE.lat, MAP_CENTRE.lng, z);
+    const c0 = mapCentre(), [cx, cy] = project(c0.lat, c0.lng, z);
     $$(".pin[data-id]", layer).forEach((p) => { const st = storeById(p.dataset.id); if (!st || !st.geo) return; const [x, y] = project(st.geo[0], st.geo[1], z); p.style.left = W / 2 + (x - cx) + "px"; p.style.top = H / 2 + (y - cy) + "px"; });
   }
   function renderMap() {
