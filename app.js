@@ -439,11 +439,23 @@
         <button type="button" class="fsbtn" data-action="video-full" data-video="${id}" data-caption="${esc(caption)}" aria-label="View full screen">${icon("d-corners-out.svg", 20)}</button>
       </div><p class="p-xs muted">${esc(caption)}</p></div>`;
 
+  // Find us map: a live Google map (free embed) styled like carpetcourt.com.au, with our Store Map Pin on top until the
+  // visitor uses the map (the embed cannot show a custom pin, so Google's own pin takes over once the map is live).
+  const gmapSrc = (q, t) => `https://www.google.com/maps?q=${q}&z=16&t=${t}&output=embed`;
+  const fsIcon = `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="#666" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   function mapCardHTML(st, extra = "") {
+    const q = encodeURIComponent(st.name + ", " + st.fullAddress);
+    const reviews = `https://www.google.com/search?q=${encodeURIComponent(st.name + " reviews")}`;
     return `<section class="card mapcard ${extra}" aria-labelledby="map-title-${extra || "d"}">${sh("MAP", `<span id="map-title-${extra || "d"}">Find us</span>`)}
-      <div class="mapcard__map"><img src="assets/img/d-map.png" alt="Map showing ${esc(st.name)}" /><span class="pin is-selected" style="position:relative;left:auto;top:auto"><span class="pin__halo"><span class="pin__badge">${icon("d-map-pin.svg", 26)}</span></span><span class="pin__label">${esc(st.short)}</span></span></div>
+      <div class="gmap" data-q="${q}">
+        <iframe class="gmap__frame" title="Map of ${esc(st.name)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${gmapSrc(q, "m")}"></iframe>
+        <button type="button" class="gmap__cover" data-action="map-activate" aria-label="Explore the map of ${esc(st.name)}"><span class="pin is-selected gmap__pin" aria-hidden="true"><span class="pin__halo"><span class="pin__badge">${icon("d-map-pin.svg", 26)}</span></span><span class="pin__label">${esc(st.short)}</span></span></button>
+        <div class="gmap__type" role="group" aria-label="Map type"><button type="button" data-action="map-type" data-t="m" aria-pressed="true">Map</button><button type="button" data-action="map-type" data-t="k" aria-pressed="false">Satellite</button></div>
+        <button type="button" class="gmap__fs" data-action="map-full" aria-label="View map full screen">${fsIcon}</button>
+        <a class="gmap__review" href="${reviews}" target="_blank" rel="noopener" aria-label="Review us on Google"><span class="gmap__review-t">Review us on</span><span class="gmap__g" aria-hidden="true"><b style="color:#4285F4">G</b><b style="color:#EA4335">o</b><b style="color:#FBBC05">o</b><b style="color:#4285F4">g</b><b style="color:#34A853">l</b><b style="color:#EA4335">e</b></span></a>
+      </div>
       <p class="p-xs muted">${esc(st.fullAddress)}</p>
-      <a class="btn btn--secondary btn--block" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.name + " " + st.fullAddress)}" target="_blank" rel="noopener">Get directions</a></section>`;
+      <a class="btn btn--secondary btn--block" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Get directions</a></section>`;
   }
 
   function renderDetails(id) {
@@ -737,6 +749,9 @@
         if (stopId) setPlaying(stopId, false);
         break;
       }
+      case "map-activate": { const g = a.closest(".gmap"); g.classList.add("is-live"); g.querySelector("iframe").focus(); break; }
+      case "map-type": { const g = a.closest(".gmap"); g.querySelector("iframe").src = gmapSrc(g.dataset.q, a.dataset.t); g.querySelectorAll(".gmap__type button").forEach((b) => b.setAttribute("aria-pressed", String(b === a))); g.classList.add("is-live"); break; }
+      case "map-full": { const g = a.closest(".gmap"); g.classList.add("is-live"); if (document.fullscreenElement) document.exitFullscreen(); else if (g.requestFullscreen) g.requestFullscreen(); break; }
       case "hours": openHours(a); break;
       case "scroll-to": e.preventDefault(); scrollToId(a.dataset.target); break;
       case "faq": {

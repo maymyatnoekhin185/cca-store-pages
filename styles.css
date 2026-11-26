@@ -489,9 +489,25 @@ main { outline: none; }
 .baction { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
 .bpanel .note { font-size: 12px; line-height: 16px; color: var(--text-60); text-align: center; }
 .mapcard { padding: 32px; display: flex; flex-direction: column; gap: 12px; }
-.mapcard__map { position: relative; height: 200px; border-radius: 8px; overflow: hidden; border: 1px solid var(--grey-1); display: flex; align-items: center; justify-content: center; }
-.mapcard__map > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.mapcard__map .pin { position: relative; transform: translateY(-14px); }
+/* Find us: live Google map styled like carpetcourt.com.au */
+.gmap { position: relative; height: 300px; border-radius: 12px; overflow: hidden; background: #e8eaed; box-shadow: var(--shadow-md); }
+.gmap:fullscreen { border-radius: 0; height: 100%; }
+.gmap__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.gmap__cover { position: absolute; inset: 0; z-index: 1; cursor: grab; background: transparent; }
+.gmap__pin.pin.is-selected { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52px); transition: opacity .2s; }
+.gmap.is-live .gmap__cover { display: none; }
+.gmap__type { position: absolute; left: 10px; top: 10px; z-index: 2; display: flex; background: #fff; border-radius: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.3); overflow: hidden; }
+.gmap__type button { padding: 8px 14px; font-weight: 500; font-size: 14px; line-height: 18px; color: #565656; }
+.gmap__type button + button { border-left: 1px solid #e6e6e6; }
+.gmap__type button[aria-pressed="true"] { color: #000; }
+.gmap__type button:hover { background: #ebebeb; }
+.gmap__fs { position: absolute; right: 10px; top: 10px; z-index: 2; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+.gmap__fs:hover { background: #ebebeb; }
+.gmap__review { position: absolute; right: 10px; bottom: 28px; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0; padding: 6px 12px 4px; background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.2); text-decoration: none; color: var(--black); }
+.gmap__review-t { font-weight: 500; font-size: 11px; line-height: 14px; letter-spacing: .2px; }
+.gmap__g { font-family: Arial, Helvetica, sans-serif; font-size: 22px; line-height: 24px; letter-spacing: -0.5px; }
+.gmap__g b { font-weight: 400; }
+.gmap__review:hover { box-shadow: 0 2px 10px rgba(0,0,0,.25); }
 
 /* ---------- Overlays ---------- */
 .scrim { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.4); animation: fade .15s ease-out; }
@@ -703,3 +719,5 @@ body:has(#overlay-root:not(:empty)) .proto { display: none; }
 @media (min-width: 1024px) {
   .loc__mobile-row, .rh--mobile, .tab--mobile-only, .mapcard--mobile, .show-more { display: none !important; }
 }
+
+@media (max-width: 1023px) { .gmap { height: 260px; } .gmap__review { bottom: 24px; } }
